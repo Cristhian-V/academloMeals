@@ -22,6 +22,7 @@ const Meals = db.define('meals',{
   },
   status:{
     allowNull:false,
+    defaultValue:true,
     type: DataTypes.BOOLEAN
   }
 },{

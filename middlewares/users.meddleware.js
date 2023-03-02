@@ -3,7 +3,7 @@ const { AppError } = require("../utils/appError");
 const { catchAsync } = require("../utils/catchAsync");
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const {promisify} = require('util')
+const {promisify} = require('util');
 
 const userExist = catchAsync(async(req,res,next)=>{
   const {email} = req.body
@@ -57,6 +57,21 @@ const protectAccountOwner = catchAsync(async(req,res,next) =>{
   next()
 })
 
+const validUserAdmin = catchAsync(async(req,res,next)=>{
+  const {id} = req.decoded
+  const user = await Users.findOne({
+    where:{
+      id
+    }
+  })
+
+  if(user.role != 'admin') return next(new AppError('solo los usuarios con rol Administrador pueden realizar esta accion'))
+
+  req.user = user
+
+  next()  
+})
+
 module.exports = {
-  userExist, validDataUser, validToken, protectAccountOwner
+  userExist, validDataUser, validToken, protectAccountOwner, validUserAdmin
 }

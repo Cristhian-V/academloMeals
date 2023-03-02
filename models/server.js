@@ -5,6 +5,9 @@ const initModel = require('./init.model')
 const { AppError } = require('../utils/appError')
 const { globalErrorHandler } = require('../controllers/error.controller')
 const { routesUsers } = require('../routes/users.routes')
+const { routesRestaurants } = require('../routes/restaurants.routes')
+const { routesMeals } = require('../routes/meals.routes')
+const { routesOrders } = require('../routes/orders.routes')
  
 class Server {
   constructor(){
@@ -13,7 +16,10 @@ class Server {
 
     //path Routes 
     this.path = {
-      users: '/api/v1/users'
+      users: '/api/v1/users',
+      restaurants: '/api/v1/restaurants',
+      meals: '/api/v1/meals',
+      orders: '/api/v1/orders'
     }
     //connect DB
     this.database()
@@ -30,7 +36,9 @@ class Server {
 
   routes(){
     this.app.use(this.path.users, routesUsers)
-
+    this.app.use(this.path.restaurants, routesRestaurants)
+    this.app.use(this.path.meals, routesMeals)
+    this.app.use(this.path.orders, routesOrders)
 
     this.app.all('*', (req, res, next) =>{
       return next(new AppError(`La ruta ${req.originalUrl} no existe en el servidor`, 404))
